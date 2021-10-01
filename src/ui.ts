@@ -10,10 +10,20 @@ import _ = require('lodash');
  */
 const Vorpal = vorpal();
 
+/**
+ * Displays the current AntGame map to the user.
+ * 
+ * @param game the current AntGame
+ */
 export function showMapOf(game:AntGame){
   console.log(getMap(game));
 }
 
+/**
+ * COME BACK
+ * @param game the current AntGame
+ * @returns string representing the current Gameboard state
+ */
 function getMap(game:AntGame) {
   let places:Place[][] = game.getPlaces();
   let tunnelLength = places[0].length;
@@ -99,7 +109,6 @@ function iconFor(ant:Ant){
   }
   return icon;
 }
-
 
 export function play(game:AntGame) {
   Vorpal
