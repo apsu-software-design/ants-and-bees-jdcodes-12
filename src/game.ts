@@ -1,5 +1,8 @@
 import {Insect, Bee, Ant, GrowerAnt, ThrowerAnt, EaterAnt, ScubaAnt, GuardAnt} from './ants';
 
+/**
+ * 
+ */
 class Place {
   protected ant:Ant;
   protected guard:GuardAnt;
@@ -23,6 +26,7 @@ class Place {
       return this.ant;
   }
 
+  
   getGuardedAnt():Ant {
     return this.ant;
   }
@@ -114,7 +118,9 @@ class Place {
   }
 }
 
-
+/**
+ * 
+ */
 class Hive extends Place {
   private waves:{[index:number]:Bee[]} = {}
 
@@ -149,7 +155,9 @@ class Hive extends Place {
   }
 }
 
-
+/**
+ * 
+ */
 class AntColony {
   private food:number;
   private places:Place[][] = [];
@@ -280,7 +288,9 @@ class AntColony {
   }
 }
 
-
+/**
+ * Concrete class to control the gameplay.
+ */
 class AntGame {
   private turn:number = 0;
   constructor(private colony:AntColony, private hive:Hive){}

@@ -91,20 +91,20 @@ export class Bee extends Insect {
   /**
    * Creates a new Bee Object
    * 
-   * @param armor a number representing the quanity of armor the new Bee should have
+   * @param armor a number representing the quantity of armor the new Bee should have
    * @param damage a number presenting the damage the new Bee should do to an Ant
-   * @param place a Place, optional, that determines where the Bee should be placed on the board
+   * @param place a Place that determines where the Bee should be located on the board (optional)
    */
   constructor(armor:number, private damage:number, place?:Place){
     super(armor, place);
   }
 
-
   /**
-   * Attack functionality for Bee(s) to do damage to an Ant.
+   * Attack functionality for a Bee to do damage to an Ant. Checks to see 
+   * if the Ant needs to retreat or not.
    * 
    * @param ant an Ant object represetning an Ant to do damage to
-   * @returns a boolean representing if damage calculation happened -  checks to see if the Ant needs to retreat or not. 
+   * @returns a boolean representing if damage calculation happened -   
    */
   sting(ant:Ant):boolean{
     console.log(this+ ' stings '+ant+'!');
@@ -124,12 +124,17 @@ export class Bee extends Insect {
   /**
    * Sets the status of a Bee object.
    * 
-   * @param status condition of a Bee object (e.g. stucky, frozen, etc.)
+   * @param status condition of a Bee object (e.g. stuck, frozen, etc.)
    */
   setStatus(status:string) { this.status = status; }
 
   /**
+   * Performs a Bee's sting action during the turn. Checks to
+   * see if an Ant is blocking it's path. If an Ant is present, and the Bee
+   * is not under the cold special condition it calculates damage to the Ant
+   * that is blocking it.
    * 
+   * Additionally checks to see if the Bee needs to retreat (i.g. removed from tunnel)
    */
   act() {
     if(this.isBlocked()){
@@ -190,10 +195,21 @@ export abstract class Ant extends Insect {
 export class GrowerAnt extends Ant {
   readonly name:string = "Grower";
 
+  /**
+   * Creates a new Grower Ant with armor and food cost both set to 1
+   */
   constructor() {
     super(1,1)
   }
 
+  /**
+   * Performs a GrowerAnt's functionality during the turn. Simulates a die roll
+   * for a turn using Math.random(). Based on roll, the GrowerAnt will either produce
+   * 1 food for the colony or add 1 special boost (e.g. FlyingLeaf, StickyLeaf, IcyLeaf,
+   * BugSpray)
+   *  
+   * @param colony the current AntColony
+   */
   act(colony:AntColony) {
     let roll = Math.random();
     if(roll < 0.6){

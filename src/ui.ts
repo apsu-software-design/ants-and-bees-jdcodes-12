@@ -80,7 +80,11 @@ function getMap(game:AntGame) {
   return map;
 }
 
-
+/**
+ * 
+ * @param ant 
+ * @returns 
+ */
 function iconFor(ant:Ant){
   if(ant === undefined){ return ' ' };
   let icon:string;
@@ -110,6 +114,10 @@ function iconFor(ant:Ant){
   return icon;
 }
 
+/**
+ * 
+ * @param game the Antgame intended to be played
+ */
 export function play(game:AntGame) {
   Vorpal
     .delimiter(chalk.green('AvB $'))
