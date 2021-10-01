@@ -234,11 +234,39 @@ export class ThrowerAnt extends Ant {
   readonly name:string = "Thrower";
   private damage:number = 1;
 
+  /**
+   * Creates a new ThrowerAnt object with 1 armor and food cost of 4
+   */
   constructor() {
     super(1,4);
   }
 
+  /**
+   * Performs a ThrowerAnt's functionality during the turn. Runs
+   * initial check to see if the BugSpray boost has been activated. If
+   * BugSpray boost has not been activated, then checks for FlyingLeaf
+   * boost activation. ThrowerAnt then attacks the Bee, notifying user.
+   * After damage is calcalulated, checks to see if a Bee has been 
+   * affected by the StickyLeaf or IcyLeaf -- setting that status for
+   * the targeted Bee, will notify user based on which effect has been applied.
+   * If no boosts were activated, leave boost as undefined. 
+   * 
+   * If BugSpray boost has been activated, destroyes all Bees (and calling Ant)
+   * in the tunnel.
+   * 
+   * If FlyingLeaf boost has been activated, increases the range a ThrowerAnt 
+   * can throw its leaf by 2 distances. 
+   * 
+   * If StickyLeaf boost has been activated, sets targeted Bee's status to stuck
+   * preventing its movement next turn.
+   * 
+   * If IcyLeaf boost has been activated, sets targetd Bee's status to cold,
+   * preventing it from stining an Ant next turn.
+   *
+   */
   act() {
+
+    //Non-BugSpray attack patterns. 
     if(this.boost !== 'BugSpray'){
       let target;
       if(this.boost === 'FlyingLeaf')
@@ -261,6 +289,8 @@ export class ThrowerAnt extends Ant {
         this.boost = undefined;
       }
     }
+    
+    //BugSpray attack pattern
     else {
       console.log(this + ' sprays bug repellant everywhere!');
       let target = this.place.getClosestBee(0);
