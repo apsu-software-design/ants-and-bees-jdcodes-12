@@ -23,7 +23,7 @@
 3) Eater (E) - Eats the bee, 3 turns to eat the bee.
 	-> 3 turn recharge to eat again
 	-> If damaged or retreats, can cough up Bee.
-	-> cost 4 food, has 1 Armor
+	-> cost 4 food, has 2 Armor
 
 4) Scuba (S) - Throw leaves at the Bees, can live under water. 
 	-> Cost 5 food, have 1 armor.

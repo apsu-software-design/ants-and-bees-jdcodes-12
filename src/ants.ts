@@ -311,16 +311,35 @@ export class EaterAnt extends Ant {
   readonly name:string = "Eater";
   private turnsEating:number = 0;
   private stomach:Place = new Place('stomach');
+
+  /**
+   * Creates a new EaterAnt object with 2 armor and food cost of 4.
+   */
   constructor() {
     super(2,4)
   }
 
+  /**
+   * Helper function to check if an EaterAnt's stomach is full. 
+   * 
+   * @returns a boolean representing if the EaterAnt's stomach is full
+   */
   isFull():boolean {
     return this.stomach.getBees().length > 0;
   }
 
+  /**
+   * Performs an EaterAnt's functionality during the turn. 
+   * 
+   * 
+   * 
+   */
   act() {
+
+    //Log turns since eating a Bee.
     console.log("eating: "+this.turnsEating);
+
+    //If no Bee ate, try to eat closet Bee.
     if(this.turnsEating == 0){
       console.log("try to eat");
       let target = this.place.getClosestBee(0);
@@ -330,7 +349,10 @@ export class EaterAnt extends Ant {
         this.stomach.addBee(target);
         this.turnsEating = 1;
       }
-    } else {
+    } 
+    
+    //Handles Eating Cooldown
+    else {
       if(this.turnsEating > 3){
         this.stomach.removeBee(this.stomach.getBees()[0]);
         this.turnsEating = 0;
