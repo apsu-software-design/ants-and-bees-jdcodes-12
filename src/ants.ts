@@ -242,13 +242,15 @@ export class ThrowerAnt extends Ant {
   }
 
   /**
-   * Performs a ThrowerAnt's functionality during the turn. Runs
-   * initial check to see if the BugSpray boost has been activated. If
-   * BugSpray boost has not been activated, then checks for FlyingLeaf
-   * boost activation. ThrowerAnt then attacks the Bee, notifying user.
-   * After damage is calcalulated, checks to see if a Bee has been 
-   * affected by the StickyLeaf or IcyLeaf -- setting that status for
-   * the targeted Bee, will notify user based on which effect has been applied.
+   * Performs a ThrowerAnt's functionality during the turn. 
+   * 
+   * Runs initial check to see if the BugSpray boost has been activated. 
+   * If BugSpray boost has not been activated, then checks for FlyingLeaf
+   * boost activation. ThrowerAnt then attacks the targeted Bee, notifying 
+   * the user. After damage is calcalulated, checks to see if a Bee has 
+   * been affected by the StickyLeaf or IcyLeaf -- setting that status for
+   * the targeted Bee. Will notify user based which effect has been applied.
+   * 
    * If no boosts were activated, leave boost as undefined. 
    * 
    * If BugSpray boost has been activated, destroyes all Bees (and calling Ant)
@@ -262,7 +264,6 @@ export class ThrowerAnt extends Ant {
    * 
    * If IcyLeaf boost has been activated, sets targetd Bee's status to cold,
    * preventing it from stining an Ant next turn.
-   *
    */
   act() {
 
@@ -430,7 +431,28 @@ export class ScubaAnt extends Ant {
   }
 
   /**
+   * Performs a ScubaAnt's functionality during the turn. 
    * 
+   * Runs initial check to see if the BugSpray boost has been activated. 
+   * If BugSpray boost has not been activated, then checks for FlyingLeaf
+   * boost activation. ScubaAnt then attacks the targeted Bee, notifying 
+   * the user. After damage is calcalulated, checks to see if a Bee has 
+   * beenaffected by the StickyLeaf or IcyLeaf -- setting that status for
+   * the targeted Bee. Will notify user based which effect has been applied.
+   * 
+   * If no boosts were activated, leave boost as undefined. 
+   * 
+   * If BugSpray boost has been activated, destroyes all Bees (and calling Ant)
+   * in the tunnel.
+   * 
+   * If FlyingLeaf boost has been activated, increases the range a ScubaAnt 
+   * can throw its leaf by 2 distances. 
+   * 
+   * If StickyLeaf boost has been activated, sets targeted Bee's status to stuck
+   * preventing its movement next turn.
+   * 
+   * If IcyLeaf boost has been activated, sets targetd Bee's status to cold,
+   * preventing it from stining an Ant next turn.
    */
   act() {
     if(this.boost !== 'BugSpray'){
