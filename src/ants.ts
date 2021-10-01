@@ -89,7 +89,7 @@ export class Bee extends Insect {
   private status:string;
 
   /**
-   * Creates a new Been Object
+   * Creates a new Bee Object
    * 
    * @param armor a number representing the quanity of armor the new Bee should have
    * @param damage a number presenting the damage the new Bee should do to an Ant
@@ -122,12 +122,15 @@ export class Bee extends Insect {
   }
 
   /**
-   * Sets the status of a Bee obejct.
+   * Sets the status of a Bee object.
    * 
    * @param status condition of a Bee object (e.g. stucky, frozen, etc.)
    */
   setStatus(status:string) { this.status = status; }
 
+  /**
+   * 
+   */
   act() {
     if(this.isBlocked()){
       if(this.status !== 'cold') {
@@ -146,10 +149,17 @@ export class Bee extends Insect {
 /**
  * Abstract child class of Insect, providing framework 
  * for various Ant Types (e.g. Thrower, Grower, etc.)
- * 
  */
 export abstract class Ant extends Insect {
   protected boost:string;
+
+  /**
+   * Parent constuctor for Ant child objects.
+   * 
+   * @param armor a number representing the amount of armor a new Ant should have
+   * @param foodCost a number representing the food cost of a new Ant. Default value of 0
+   * @param place a Place representing the location where an Ant should be set (optional)
+   */
   constructor(armor:number, private foodCost:number = 0, place?:Place) {
     super(armor, place);
   }
