@@ -331,7 +331,16 @@ export class EaterAnt extends Ant {
   /**
    * Performs an EaterAnt's functionality during the turn. 
    * 
+   * Notify user of how many turns since an EaterAnt has last ate a Bee. 
+   * Checks to see if a Bee has been eaten. If no Bee has been ate, targets
+   * the closest Bee to the EaterAnt for eating and removes that Bee from 
+   * the map and places it in the EaterAnt's stomach. If no Bee exists, then '
+   * nothing happens. 
    * 
+   * If the EaterAnt has a Bee in it's stomach currently, increments 
+   * the turns since last eating the Bee by one. If turns is greater than 
+   * three, removes that Bee from the EaterAnt's stomach and resets
+   * turns since last easting a Bee to 0.
    * 
    */
   act() {
@@ -362,6 +371,24 @@ export class EaterAnt extends Ant {
     }
   }  
 
+
+  /**
+   * Notify user of the damage taken, display curent armor levels.
+   * 
+   * If armor EaterAnt takes damage, coughs up the currently ate
+   * Bee and places it on the map. Notify user that the EaterAnt 
+   * has coughed up the Bee. Sets turns since last eating a Bee
+   * to three, preparring for next turn reset.
+   * 
+   * If armor is less than zero (e.g. EaterAnt has retreated) and 
+   * turns since last eating is between 1 and 2, AntEater coughs
+   * up currently ate Bee. Does not reset turns since last eating
+   * a Bee to 0 (since Ant has retreated). Notify user the Bee 
+   * has been placed back on the board.
+   * 
+   * @param amount the amount in which to reduce armor (e.g. damage)
+   * @returns a boolean representing if the EaterAnt has to retreat or not 
+   */
   reduceArmor(amount:number):boolean {
     this.armor -= amount;
     console.log('armor reduced to: '+this.armor);
@@ -395,10 +422,16 @@ export class ScubaAnt extends Ant {
   readonly name:string = "Scuba";
   private damage:number = 1;
 
+  /**
+   * Creates a new ScubaAnt object with 1 armor and food cost of 5
+   */
   constructor() {
     super(1,5)
   }
 
+  /**
+   * 
+   */
   act() {
     if(this.boost !== 'BugSpray'){
       let target;
@@ -441,10 +474,18 @@ export class ScubaAnt extends Ant {
 export class GuardAnt extends Ant {
   readonly name:string = "Guard";
 
+  /**
+   * Creates a new GuardAnt with 2 armor and food cost of 4
+   */
   constructor() {
     super(2,4)
   }
 
+  /**
+   * Gets the Ant who is currently being Guarded by the GuardAnt
+   * 
+   * @returns the current guarded Ant object
+   */
   getGuarded():Ant {
     return this.place.getGuardedAnt();
   }
