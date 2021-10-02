@@ -6,7 +6,7 @@ import chalk = require('chalk');
 import _ = require('lodash');
 
 /**
- * The Vorpal library for command-line interaction
+ * The Vorpal library for command-line interaction.
  */
 const Vorpal = vorpal();
 

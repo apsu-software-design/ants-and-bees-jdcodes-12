@@ -1,24 +1,54 @@
 import {Insect, Bee, Ant, GrowerAnt, ThrowerAnt, EaterAnt, ScubaAnt, GuardAnt} from './ants';
 
 /**
- * 
+ * Concrete Class used to create individual
+ * spaces in the Colony (i.g. gameboard).
  */
 class Place {
   protected ant:Ant;
   protected guard:GuardAnt;
   protected bees:Bee[] = [];
 
+  /**
+   * Sets up a location in the colony.
+   * 
+   * @param name a string represetning the name of current location
+   * @param water a boolean representing if current location is flooded
+   * @param exit a Place representing if an object needs to retreat (undefined by default)
+   * @param entrance a Place represetning if an object needs to enter the colony (undefined by default)
+   */
   constructor(readonly name:string,
               protected readonly water = false,
               private exit?:Place, 
               private entrance?:Place) {}
 
+  /**
+   * Gets the exit location of a Place.
+   * 
+   * @returns the Place of a location's exit
+   */
   getExit():Place { return this.exit; }
 
+  /**
+   * Sets a Place's entrance location.
+   * 
+   * @param place the location to set a place's entrance
+   */
   setEntrance(place:Place){ this.entrance = place; }
 
+  /**
+   * Checks to see if the current location is flooded.
+   * 
+   * @returns a boolean representing the water status of a location in tunnel
+   */
   isWater():boolean { return this.water; }
 
+  /**
+   * Gets an Ant at a certain location. Checks to see
+   * if the Ant is a guard ant or not. 
+   * 
+   * @returns the Ant at the current location
+   */
   getAnt():Ant { 
     if(this.guard) 
       return this.guard;
@@ -26,13 +56,31 @@ class Place {
       return this.ant;
   }
 
-  
+  /**
+   * Gets the guarded ant from current location.
+   * 
+   * @returns the currently guarded Ant
+   */
   getGuardedAnt():Ant {
     return this.ant;
   }
 
+  /**
+   * Gets all currently placed Bees on the gameboard.
+   * 
+   * @returns the currently placed Bees
+   */
   getBees():Bee[] { return this.bees; }
 
+  /**
+   * Cycles through the Bee's currently on the board, 
+   * and returns the Bee. Returns undefined if no Bee
+   * exists in the tunnel. 
+   * 
+   * @param maxDistance the furthest distance a Bee can be located
+   * @param minDistance the least distance a Bee can be located, default to zero.
+   * @returns the closest Bee in a valid Place
+   */
   getClosestBee(maxDistance:number, minDistance:number = 0):Bee {
 		let p:Place = this;
 		for(let dist = 0; p!==undefined && dist <= maxDistance; dist++) {
@@ -44,6 +92,15 @@ class Place {
 		return undefined;
   }
 
+  /**
+   * Adds an Ant to the gameboard at the current location.
+   * Checks to see if the Ant is a Guard ant or another type.
+   * If an Ant already exists at the current location, returns 
+   * false. 
+   * 
+   * @param ant the type of Ant to be added to the gameboard
+   * @returns a boolean representing if the Ant was succesfully placed or not
+   */
   addAnt(ant:Ant):boolean {
     if(ant instanceof GuardAnt) {
       if(this.guard === undefined){
@@ -61,6 +118,12 @@ class Place {
     return false;
   }
 
+  /**
+   * Removes an Ant from current location on the gameboard.
+   * Checks to see if the Ant is a Guard ant or another type.
+   * 
+   * @returns the Ant that was removed from current location
+   */
   removeAnt():Ant {
     if(this.guard !== undefined){
       let guard = this.guard;
@@ -74,11 +137,24 @@ class Place {
     }
   }
 
+  /**
+   * Adds a Bee to the gameboard at a specified location.
+   * Adds the Bee to the location's bees array.
+   * 
+   * @param Bee the Bee to add
+   */
   addBee(bee:Bee):void {
     this.bees.push(bee);
     bee.setPlace(this);
   }
 
+  /**
+   * Removes a Bee from the gameboard at a specified location.
+   * Removes the Bee from the location's bees array.
+   * If no Bee exists, does nothing. 
+   * 
+   * @param bee the bee to remove
+   */
   removeBee(bee:Bee):void {
     var index = this.bees.indexOf(bee);
     if(index >= 0){
@@ -87,16 +163,31 @@ class Place {
     }
   }
 
+  /**
+   * Removes all Bee's from a location's bee array.
+   */
   removeAllBees():void {
     this.bees.forEach((bee) => bee.setPlace(undefined) );
     this.bees = [];
   }
 
+  /**
+   * Removes a Bee from it's current location.
+   * Adds the Bee to the list of bees to leave 
+   * at end turn.
+   * 
+   * @param bee the Bee to retreat
+   */
   exitBee(bee:Bee):void {
     this.removeBee(bee);
     this.exit.addBee(bee);  
   }
 
+  /**
+   * Removes an Insect from its current location.
+   * 
+   * @param insect the Ant or Bee to be removed.
+   */
   removeInsect(insect:Insect) {
     if(insect instanceof Ant){
       this.removeAnt();
@@ -106,6 +197,16 @@ class Place {
     }
   }
 
+  /**
+   * Performs Places's functionality during a turn.
+   * 
+   * If a location is flooded, removes all Ants unless
+   * the ant's type is Scuba.
+   * 
+   * If the location has a Guard Ant, remove the Guard
+   * first.
+   * 
+   */
   act() {
     if(this.water){
       if(this.guard){
