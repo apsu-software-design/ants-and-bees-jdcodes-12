@@ -220,15 +220,32 @@ class Place {
 }
 
 /**
- * 
+ * Concrete Child class of Place. Sets up a Hive of Bees,
+ * additionally controlling the waves and invading of bees.
  */
 class Hive extends Place {
   private waves:{[index:number]:Bee[]} = {}
 
+  /**
+   * Creates a new Bee Hive, giving each Bee
+   * a set number of armor and damage.
+   * 
+   * @param beeArmor the amount of armor a Bee should have
+   * @param beeDamage the amount of damage a Bee should deal
+   */
   constructor(private beeArmor:number, private beeDamage:number){
     super('Hive');
   }
 
+  /**
+   * Creates a new wave of Bees, intializing them with set armor
+   * and damage values. Adds the bee to the Hive, then adds the Bee
+   * to the wave.
+   * 
+   * @param attackTurn - the wave's attack turn index (.e.g turn 3, turn 4, etc.)
+   * @param numBees the number of Bees to be put in new wave
+   * @returns the newly created wave of Bees.
+   */
   addWave(attackTurn:number, numBees:number):Hive {
     let wave:Bee[] = [];
     for(let i=0; i<numBees; i++) {
@@ -240,7 +257,18 @@ class Hive extends Place {
     return this;
   }
   
+  /**
+   * If the Bee wave from the Hive is not empty, randomly 
+   * assigns each Bee to a colony's tunnel entrances. If 
+   * no wave, returns an empty array.
+   * 
+   * @param colony the AntColony to invade
+   * @param currentTurn the current turn
+   * @returns the wave of Bees who are invading
+   */
   invade(colony:AntColony, currentTurn:number): Bee[]{
+
+    //If Wave isn't empty, randomly assign Bee's go tunnel entrances
     if(this.waves[currentTurn] !== undefined) {
       this.waves[currentTurn].forEach((bee) => {
         this.removeBee(bee);
@@ -250,6 +278,8 @@ class Hive extends Place {
       });
       return this.waves[currentTurn];
     }
+    
+    //If no wave, return nothing
     else{
       return [];
     }    
