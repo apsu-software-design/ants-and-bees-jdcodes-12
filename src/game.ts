@@ -536,12 +536,30 @@ class AntColony {
 }
 
 /**
- * Concrete class to control the gameplay.
+ * Concrete class to control the game. Controlls
+ * each turn's actions, tracks turn numbers, checks
+ * to see if the game has been won, deploys Ants,
+ * gives boosts to Ants, and tracks resources.
  */
 class AntGame {
   private turn:number = 0;
+
+  /**
+   * Creates a new AntGame, setting up an AntColony
+   * and a bee Hive.
+   * 
+   * @param colony the AntColony to setup for a game
+   * @param hive The Hive to setup for a game
+   */
   constructor(private colony:AntColony, private hive:Hive){}
 
+  /**
+   * Completes one turn doing the following. All Ants
+   * take their actions first. Next, all Bees take their
+   * actions. Next each Places takes its action. Then
+   * a new wave is spawned from the Hive. Finally,
+   * the turn number is incremented.
+   */
   takeTurn() {
     console.log('');
     this.colony.antsAct();
@@ -552,8 +570,20 @@ class AntGame {
     console.log('');
   }
 
+  /**
+   * Gets the current turn name of an AntGame.
+   * 
+   * @returns the current turn number
+   */
   getTurn() { return this.turn; }
 
+  /**
+   * Checks to see if the game has been won. A game is won
+   * if the Queen has been attacked by Bees or if the Hive
+   * has no more Bees to deploy.
+   * 
+   * @returns 
+   */
   gameIsWon():boolean|undefined {
     if(this.colony.queenHasBees()){
       return false;
@@ -564,6 +594,17 @@ class AntGame {
     return undefined;
   }
 
+  /**
+   * Creates and deploys a new Ant inside the tunnels.
+   * Checks to see that Ant type is valid, if not notify
+   * user that an invalid type has been passed. Checks
+   * to see if the location is valid, if an illegal 
+   * location is trying to be accessed, notify user.
+   * 
+   * @param antType the type of Ant to attempt to create
+   * @param placeCoordinates the location in which to deploy an Ant
+   * @returns an error message if an Ant is of unknown type or placed in an illegal location
+   */
   deployAnt(antType:string, placeCoordinates:string):string {
     let ant;
     switch(antType.toLowerCase()) {
@@ -590,6 +631,13 @@ class AntGame {
     }
   }
 
+  /**
+   * Removes an Ant from a specified location. If the location
+   * does not exist, throw an excaption and notify user.
+   * 
+   * @param placeCoordinates the location to remove an Ant from
+   * @returns returns undefined if successful or error message on fail (i.g. invalid loation)
+   */
   removeAnt(placeCoordinates:string):string {
     try {
       let coords = placeCoordinates.split(',');
@@ -601,6 +649,14 @@ class AntGame {
     }    
   }
 
+  /**
+   * Gives an Ant a specified boost in a specific location.
+   * If the location does not exist, notify the user.
+   * 
+   * @param boostType the type of boost to give to an Ant
+   * @param placeCoordinates the location of the Ant in which to boost
+   * @returns a message notifying the Ant has been boosted or error message on fail (i.g. invalid location)
+   */
   boostAnt(boostType:string, placeCoordinates:string):string {
     try {
       let coords = placeCoordinates.split(',');
@@ -611,9 +667,33 @@ class AntGame {
     }    
   }
 
+  /**
+   * Gets all the places in a colony (i.g. gets the current
+   * gameboard).
+   * 
+   * @returns a 2D array representing each location in a colony
+   */
   getPlaces():Place[][] { return this.colony.getPlaces(); }
+
+  /**
+   * Gets the food supply of a colony.
+   * 
+   * @returns the total food supply of a colony
+   */
   getFood():number { return this.colony.getFood(); }
+
+  /**
+   * Gets the reminaing Bees in game's bee Hive.
+   * 
+   * @returns the reamining number of Bees in a Hive.
+   */
   getHiveBeesCount():number { return this.hive.getBees().length; }
+
+  /**
+   * Gets the available boosts in a colony.
+   * 
+   * @returns the list of boost names.
+   */
   getBoostNames():string[] { 
     let boosts = this.colony.getBoosts();
     return Object.keys(boosts).filter((boost:string) => {
