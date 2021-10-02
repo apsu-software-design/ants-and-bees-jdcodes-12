@@ -2,14 +2,14 @@ import {AntColony, Place} from './game';
 
 
 /**
- * Abstract class providing framework for creasting
+ * Abstract class providing framework for creating
  * Bee & Ant objects.
  */
 export abstract class Insect {
   readonly name:string;
 
   /**
-   * Superclass constructor for Insect objects. 
+   * Superclass constructor for Insect objects.
    * 
    * @param armor a number representing how much armor the Insect should have
    * @param place a Place object representing a location of the Insect
@@ -17,37 +17,39 @@ export abstract class Insect {
   constructor(protected armor:number, protected place:Place){}
 
   /**
-   * Get the name of an Insect object
+   * Get the name of an Insect.
    * 
    * @returns a string representing the Insect's name
    */
   getName():string { return this.name; }
 
   /**
-   * Gets the amount of armor from an Insect (Ant or Bee)
+   * Gets the amount of armor for an Insect.
    * 
    * @returns a number representing the Insect's armor quantity
    */
   getArmor():number { return this.armor; }
 
   /**
-   * Gets the current location of an Insect (Ant or Bee)
+   * Gets the current location of an Insect.
    * 
-   * @returns the current Place of an Insect
+   * @returns the current location of an Insect
    */
   getPlace() { return this.place; }
 
   /**
    * Sets or readjusts an Insect's position on the board. 
    * 
-   * @param place a Plce object representing the location to send the Insect to.
+   * @param place a Place object representing the location to move the Insect to.
    */
   setPlace(place:Place){ this.place = place; }
 
   /**
-   *  Reduces the armor of an Insect. If the armor is 0 or less, 
-   *  prints to the console that the respective Insect's armor has expired 
-   *  and then removes the Insect from the gameboard. 
+   *  Reduces the armor of an Insect. 
+   * 
+   *  If the armor is 0 or less, prints to the console that 
+   *  the respective Insect's armor has expired and then removes 
+   *  the Insect from the gameboard. 
    *  
    * @param amount a number representing how much armor an Insect currently has
    * @returns a boolean representing if the Insect has retreated or not based on armor amount
@@ -63,17 +65,17 @@ export abstract class Insect {
   }
 
   /**
-   * Abstract method used to provide functionality for Insects on gameboard
+   * Abstract method used to provide functionality for Insects on gameboard.
    * 
    * @param colony the current AntColony
    */
   abstract act(colony?:AntColony):void;
 
   /**
-   * Helper function to display information about an Insect:
-   * displays name and place of Insect.
+   * Displays information about an Insect. Shows
+   * the Insect's name and current place.
    * 
-   * @returns string representing Insect information
+   * @returns string representing Insect's information
    */
   toString():string {
     return this.name + '('+(this.place ? this.place.name : '')+')';
@@ -89,7 +91,7 @@ export class Bee extends Insect {
   private status:string;
 
   /**
-   * Creates a new Bee Object
+   * Creates a new Bee Object.
    * 
    * @param armor a number representing the quantity of armor the new Bee should have
    * @param damage a number presenting the damage the new Bee should do to an Ant
@@ -103,8 +105,8 @@ export class Bee extends Insect {
    * Attack functionality for a Bee to do damage to an Ant. Checks to see 
    * if the Ant needs to retreat or not.
    * 
-   * @param ant an Ant object represetning an Ant to do damage to
-   * @returns a boolean representing if damage calculation happened -   
+   * @param ant an Ant object represetning an Ant to take damage
+   * @returns a boolean representing if damage calculation happened
    */
   sting(ant:Ant):boolean{
     console.log(this+ ' stings '+ant+'!');
@@ -129,12 +131,15 @@ export class Bee extends Insect {
   setStatus(status:string) { this.status = status; }
 
   /**
-   * Performs a Bee's sting action during the turn. Checks to
-   * see if an Ant is blocking it's path. If an Ant is present, and the Bee
-   * is not under the cold special condition it calculates damage to the Ant
-   * that is blocking it.
+   * Performs a Bee's sting action during the turn. 
    * 
-   * Additionally checks to see if the Bee needs to retreat (i.g. removed from tunnel)
+   * Checks to see if an Ant is blocking the Bee's path. If an 
+   * Ant is present, and the Bee is not under the cold special 
+   * condition it deals damage to the Ant that is blocking it.
+   * If no applicable condition, status is left undefined.
+   * 
+   * Additionally checks to see if the Bee needs to retreat 
+   * (i.g. removed from tunnel)
    */
   act() {
     if(this.isBlocked()){
@@ -162,7 +167,7 @@ export abstract class Ant extends Insect {
    * Parent constuctor for Ant child objects.
    * 
    * @param armor a number representing the amount of armor a new Ant should have
-   * @param foodCost a number representing the food cost of a new Ant. Default value of 0
+   * @param foodCost a number representing the food cost of a new Ant, defaults to 0
    * @param place a Place representing the location where an Ant should be set (optional)
    */
   constructor(armor:number, private foodCost:number = 0, place?:Place) {
@@ -170,7 +175,7 @@ export abstract class Ant extends Insect {
   }
 
   /**
-   * Gets the food cost of a particular Ant object
+   * Gets the food cost of a particular Ant object.
    * 
    * @returns a number representing the food cost of the Ant
    */
@@ -178,7 +183,7 @@ export abstract class Ant extends Insect {
 
   /**
    * Displays to console that the current Ant has been 
-   * a specific boost
+   * given a specific boost.
    * 
    * @param boost a string represeting the boost's name
    */
@@ -196,18 +201,25 @@ export class GrowerAnt extends Ant {
   readonly name:string = "Grower";
 
   /**
-   * Creates a new Grower Ant with armor and food cost both set to 1
+   * Creates a new Grower Ant with 1 armor and food cost of 1.
    */
   constructor() {
     super(1,1)
   }
 
   /**
-   * Performs a GrowerAnt's functionality during the turn. Simulates a die roll
-   * for a turn using Math.random(). Based on roll, the GrowerAnt will either produce
-   * 1 food for the colony or add 1 special boost (e.g. FlyingLeaf, StickyLeaf, IcyLeaf,
-   * BugSpray)
+   * Performs a GrowerAnt's functionality during the turn. 
+   * 
+   * Simulates a die roll for a turn using Math.random(). Based on roll, 
+   * the GrowerAnt will either produce one food for the colony or add one 
+   * special boost (e.g. FlyingLeaf, StickyLeaf, IcyLeaf, BugSpray).
    *  
+   * If roll is less than 0.60, adds one food to the colony.
+   * If roll is less than 0.70, adds one FlyingLeaf to colony's boost.
+   * If roll is less than 0.80, adds one StickyLeaf to colony's boost
+   * If roll is less than 0.90, adds one IcyLeaf to colony's boost.
+   * If roll is less than 0.95, adds one BugSpray to colony's boost.
+   * 
    * @param colony the current AntColony
    */
   act(colony:AntColony) {
@@ -235,7 +247,7 @@ export class ThrowerAnt extends Ant {
   private damage:number = 1;
 
   /**
-   * Creates a new ThrowerAnt object with 1 armor and food cost of 4
+   * Creates a new ThrowerAnt object with 1 armor and food cost of 4.
    */
   constructor() {
     super(1,4);
@@ -262,8 +274,8 @@ export class ThrowerAnt extends Ant {
    * If StickyLeaf boost has been activated, sets targeted Bee's status to stuck
    * preventing its movement next turn.
    * 
-   * If IcyLeaf boost has been activated, sets targetd Bee's status to cold,
-   * preventing it from stining an Ant next turn.
+   * If IcyLeaf boost has been activated, sets targeted Bee's status to cold,
+   * preventing it from stinging an Ant next turn.
    */
   act() {
 
@@ -321,9 +333,9 @@ export class EaterAnt extends Ant {
   }
 
   /**
-   * Helper function to check if an EaterAnt's stomach is full. 
+   * Checks to see if an EaterAnt's stomach is currently fully.
    * 
-   * @returns a boolean representing if the EaterAnt's stomach is full
+   * @returns a boolean representing the EaterAnt's stomach status (e.g. full or not full)
    */
   isFull():boolean {
     return this.stomach.getBees().length > 0;
@@ -341,7 +353,7 @@ export class EaterAnt extends Ant {
    * If the EaterAnt has a Bee in it's stomach currently, increments 
    * the turns since last eating the Bee by one. If turns is greater than 
    * three, removes that Bee from the EaterAnt's stomach and resets
-   * turns since last easting a Bee to 0.
+   * turns since last eating a Bee to 0.
    * 
    */
   act() {
@@ -424,7 +436,7 @@ export class ScubaAnt extends Ant {
   private damage:number = 1;
 
   /**
-   * Creates a new ScubaAnt object with 1 armor and food cost of 5
+   * Creates a new ScubaAnt object with 1 armor and food cost of 5.
    */
   constructor() {
     super(1,5)
@@ -437,7 +449,7 @@ export class ScubaAnt extends Ant {
    * If BugSpray boost has not been activated, then checks for FlyingLeaf
    * boost activation. ScubaAnt then attacks the targeted Bee, notifying 
    * the user. After damage is calcalulated, checks to see if a Bee has 
-   * beenaffected by the StickyLeaf or IcyLeaf -- setting that status for
+   * been affected by the StickyLeaf or IcyLeaf -- setting that status for
    * the targeted Bee. Will notify user based which effect has been applied.
    * 
    * If no boosts were activated, leave boost as undefined. 
@@ -451,8 +463,8 @@ export class ScubaAnt extends Ant {
    * If StickyLeaf boost has been activated, sets targeted Bee's status to stuck
    * preventing its movement next turn.
    * 
-   * If IcyLeaf boost has been activated, sets targetd Bee's status to cold,
-   * preventing it from stining an Ant next turn.
+   * If IcyLeaf boost has been activated, sets targeted Bee's status to cold,
+   * preventing it from stinging an Ant next turn.
    */
   act() {
     if(this.boost !== 'BugSpray'){
@@ -497,16 +509,16 @@ export class GuardAnt extends Ant {
   readonly name:string = "Guard";
 
   /**
-   * Creates a new GuardAnt with 2 armor and food cost of 4
+   * Creates a new GuardAnt with 2 armor and food cost of 4.
    */
   constructor() {
     super(2,4)
   }
 
   /**
-   * Gets the Ant who is currently being Guarded by the GuardAnt
+   * Gets the Ant who is currently being Guarded by the GuardAnt.
    * 
-   * @returns the current guarded Ant object
+   * @returns the currently guarded Ant
    */
   getGuarded():Ant {
     return this.place.getGuardedAnt();
