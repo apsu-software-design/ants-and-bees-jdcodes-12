@@ -7,7 +7,7 @@
     "start": "node build/index.js",
     "test": "node build/index.js --debug"
   },
-  "author": "YOUR NAME HERE",
+  "author": "Johnathan Dickson",
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.4",
@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.50",
-    "@types/node": "^7.0.0"
+    "@types/node": "^7.0.0",
+    "typedoc": "^0.22.4"
   }
 }

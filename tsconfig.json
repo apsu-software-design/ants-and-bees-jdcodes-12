@@ -7,6 +7,11 @@
         "removeComments": true,
         "alwaysStrict": true
     },
+    "typedocOptions": {
+        "entryPoints": ["src/index.ts"],
+        "out": "docs"
+    },
+    
     "include": [
         "src/**/*"
     ],
