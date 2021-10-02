@@ -287,26 +287,45 @@ class Hive extends Place {
 }
 
 /**
- * 
+ * Concrete class controlling the Ant Colony. Contains
+ * information concerning food supply, tunnel entrances,
+ * the queen's location, boosts supply, and locations 
+ * in the colony. 
  */
 class AntColony {
-  private food:number;
-  private places:Place[][] = [];
-  private beeEntrances:Place[] = [];
-  private queenPlace:Place = new Place('Ant Queen');
-  private boosts:{[index:string]:number} = {'FlyingLeaf':1,'StickyLeaf':1,'IcyLeaf':1,'BugSpray':0}
+  private food:number; //Total food resources
+  private places:Place[][] = []; //Gameboard
+  private beeEntrances:Place[] = []; //Tunnel entraces
+  private queenPlace:Place = new Place('Ant Queen'); //Queens location
+  private boosts:{[index:string]:number} = {'FlyingLeaf':1,'StickyLeaf':1,'IcyLeaf':1,'BugSpray':0} //Default inventory of boosts
 
+  /**
+   * Sets up an a AntColony with an inital number of  tunnels, 
+   * food storage, varing tunnel lengths and the rate at which 
+   * a location floods.
+   *
+   * @param startingFood amount of food colony should start with
+   * @param numTunnels number of tunnels in a colony (entrances)
+   * @param tunnelLength the length of a tunnel (e.g. how many places in each tunnel)
+   * @param moatFrequency the requency in which a location should flood
+   */
   constructor(startingFood:number, numTunnels:number, tunnelLength:number, moatFrequency=0){
     this.food = startingFood;
 
     let prev:Place;
+
+    //
 		for(let tunnel=0; tunnel < numTunnels; tunnel++)
 		{
 			let curr:Place = this.queenPlace;
       this.places[tunnel] = [];
+
+      //Sets up individual tunnels, flooding specific locations when necessary.
 			for(let step=0; step < tunnelLength; step++)
 			{
         let typeName = 'tunnel';
+        
+        //Calulat the moat frequency
         if(moatFrequency !== 0 && (step+1)%moatFrequency === 0){
           typeName = 'water';
 				}
@@ -321,20 +340,63 @@ class AntColony {
 		}
   }
 
+  /**
+   * Gets the current food supply in a colony.
+   * 
+   * @returns the current food supply
+   */
   getFood():number { return this.food; }
 
+  /**
+   * Increase the food supply of a quality by the passed amount.
+   * 
+   * @param amount the number to increase food by
+   */
   increaseFood(amount:number):void { this.food += amount; }
 
+  /**
+   * Gets all locations in the colony.
+   * 
+   * @returns the colony's location
+   */
   getPlaces():Place[][] { return this.places; }
 
+  /**
+   * Returns the number of entraces in a colony.
+   * 
+   * @returns the valid entrances for Bees
+   */
   getEntrances():Place[] { return this.beeEntrances; }
 
+  /**
+   * Get the Queen's current location in the colony.
+   * 
+   * @returns the Queen's current position.
+   */
   getQueenPlace():Place { return this.queenPlace; }
 
+  /**
+   * Checks to see if the Queen is being attacked by Bees.
+   * 
+   * @returns a boolean representing the Queen's state (i.e. under attack or okay)
+   */
   queenHasBees():boolean { return this.queenPlace.getBees().length > 0; }
 
+  /**
+   * Gets the boost inventory of the colony.
+   * 
+   * @returns the boosts currenly available
+   */
   getBoosts():{[index:string]:number} { return this.boosts; }
 
+  /**
+   * Add a boost to the colony's inventory. If no
+   * boost is provided, leave the boost inventory
+   * at zero. Notifies user is a boost has been 
+   * found.
+   * 
+   * @param boost the name of the boost to add to colony's inventory
+   */
   addBoost(boost:string){
     if(this.boosts[boost] === undefined){
       this.boosts[boost] = 0;
@@ -343,6 +405,19 @@ class AntColony {
     console.log('Found a '+boost+'!');
   }
 
+  /**
+   * Deploys an Ant at a specified location depending on
+   * food supply and tunnel status. Subtracts the Ant's
+   * food cost from food supply. 
+   * 
+   * If not enough food, let user know there is a shortage.
+   * If location already occupied, let user know there 
+   * is not enough room in the tunnel to place the Ant.
+   * 
+   * @param ant the Ant to be placed
+   * @param place the location in the tunnel the Ant should be placed
+   * @returns undefined if successful or erorr messages to the user depending on colony status.
+   */
   deployAnt(ant:Ant, place:Place):string {
     if(this.food >= ant.getFoodCost()){
       let success = place.addAnt(ant);
@@ -355,10 +430,26 @@ class AntColony {
     return 'not enough food';
   }
 
+  /**
+   * Removes an Ant from a specified place.
+   * @param place the location an Ant should be removed from.
+   */
   removeAnt(place:Place){
     place.removeAnt();
   }
 
+  /**
+   * Checks to see if there are any Boosts in the colony.
+   * If there are available boosts, attempts to give an 
+   * Ant at a specific location a boost. 
+   * 
+   * If there is no Ant at the location, then notify user. 
+   * If there are not boosts in inventory, then nofity user.
+   * 
+   * @param boost the boost to give to the Ant
+   * @param place the location of the Ant in which to give the boost
+   * @returns undefined if a boost is given or error messages depending on colony state
+   */
   applyBoost(boost:string, place:Place):string {
     if(this.boosts[boost] === undefined || this.boosts[boost] < 1) {
       return 'no such boost';
@@ -371,6 +462,10 @@ class AntColony {
     return undefined;
   }
 
+  /**
+   * Initiates functionality for all Ants currently
+   * in the colony.
+   */
   antsAct() {
     this.getAllAnts().forEach((ant) => {
       if(ant instanceof GuardAnt) {
@@ -382,12 +477,21 @@ class AntColony {
     });    
   }
 
+  /**
+   * Initiates functionality for each Bee currently
+   * in the colony.
+   */
   beesAct() {
     this.getAllBees().forEach((bee) => {
       bee.act();
     });
   }
 
+  /**
+   * Intiaites functionality for Places (each location)
+   * in the colony. Removing Ants that need to be retreated
+   * or Ants that have been flooded.
+   */
   placesAct() {
     for(let i=0; i<this.places.length; i++) {
       for(let j=0; j<this.places[i].length; j++) {
@@ -396,6 +500,12 @@ class AntColony {
     }    
   }
 
+  /**
+   * Gets the remaining Ants in the colony (i.g. suriving Ants, unflooded Ants).
+   * Iterates through each tunnel's locations, adding surviving Ants to an array.
+   * 
+   * @returns an arry of all surviving ants in the colony.
+   */
   getAllAnts():Ant[] {
     let ants = [];
     for(let i=0; i<this.places.length; i++) {
@@ -408,6 +518,12 @@ class AntColony {
     return ants;
   }
 
+  /**
+   * Gets the remaining Bees in the colony. Iterates through each tunnel's 
+   * locations, adding surviving Bees to an array.
+   * 
+   * @returns an array of all surviving Bees
+   */
   getAllBees():Bee[] {
     var bees = [];
     for(var i=0; i<this.places.length; i++){
